@@ -46,11 +46,26 @@ An autoplay video showcase kiosk application designed for iPad display on the Ha
 
 ## Deployment
 
-### Vercel (Recommended)
+### GitHub Pages (Recommended - Free & Automatic)
+
+The site automatically deploys to GitHub Pages when you push to the repository.
+
+**Your live URL**: `https://1hoookkk.github.io/Kiosk`
+
+To enable GitHub Pages:
+1. Go to your GitHub repository settings
+2. Navigate to **Pages** (under "Code and automation")
+3. Under "Source", select **GitHub Actions**
+4. Push this code to your repository
+5. The site will automatically deploy!
+
+Access from any phone or iPad by visiting the URL above.
+
+### Vercel
 
 ```bash
 npm i -g vercel
-vercel
+vercel --prod
 ```
 
 ### Manual Hosting

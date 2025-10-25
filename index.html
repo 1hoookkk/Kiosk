@@ -336,22 +336,60 @@
     </div>
 
     <script>
-        // Cleaned and verified video list
+        // ═══════════════════════════════════════════════════════════════
+        // VIDEO CONFIGURATION - EASY TO EDIT!
+        // ═══════════════════════════════════════════════════════════════
+        // To add/edit videos:
+        // 1. Get YouTube video ID from URL (the part after "v=" or "shorts/")
+        //    Example: youtube.com/watch?v=ABC123 → ID is "ABC123"
+        //    Example: youtube.com/shorts/XYZ789 → ID is "XYZ789"
+        // 2. Add a line like: { title: "Product Name", id: "VIDEO_ID" },
+        // 3. Save and refresh!
+        // ═══════════════════════════════════════════════════════════════
+
         const videos = [
-            { title: "Roborock S8 MaxV Ultra", id: "87O6hE4cKPM" },
-            { title: "Dreame X40 Ultra", id: "VKYolDuOwGg" },
+            // ECOVACS Models
+            { title: "ECOVACS WS2", id: "UGETKR5BlY0" },
+            { title: "ECOVACS X11", id: "vknCyYVN8Z8" },
+            { title: "ECOVACS Mopping Demo", id: "5gcfk1V16Qs" },
+
+            // Roborock Models
+            { title: "Roborock Z10", id: "87O6hE4cKPM" },
+
+            // Dreame Models
+            { title: "Dreame X50 Ultra", id: "VKYolDuOwGg" },
+            { title: "Dreame X50 - Feature 1", id: "neE7uisXKZU" },
+            { title: "Dreame X50 - Feature 2", id: "qJm17uu0cvk" },
             { title: "Dreame L40 Ultra", id: "Ebkp8Y02z-M" },
-            { title: "Dreame L20 Ultra", id: "bTT5nnP74Jo" },
-            { title: "ECOVACS X2 OMNI", id: "vknCyYVN8Z8" },
-            { title: "ECOVACS Mopping Technology", id: "5gcfk1V16Qs" },
-            { title: "EUFY X10 Pro Omni", id: "bCzMVZZ20ig" },
-            { title: "EUFY Clean X9 Pro", id: "QRJ6TPcN8IU" },
+            { title: "Dreame L40", id: "bTT5nnP74Jo" },
+            { title: "Dreame Aqua", id: "cmKRwiyHOpU" },
+
+            // EUFY Models
+            { title: "EUFY Robot Vacuum", id: "bCzMVZZ20ig" },
+            { title: "EUFY Feature", id: "QRJ6TPcN8IU" },
+            { title: "EUFY X1", id: "X1BuTmM12Vl" },
+
+            // MOVA Models
+            { title: "MOVA Roller", id: "JHVghFKiBcI" },
+            { title: "MOVA Z60 Setup", id: "xCaiIs5dE80" },
+
+            // SAROS Models
+            { title: "SAROS 10R", id: "rDEJDwe5M00" },
+            { title: "SAROS 10R Feature", id: "HmNDDBYGcU0" },
+
+            // NARWAL Models
             { title: "NARWAL Freo", id: "G2RmztS8Go0" },
-            { title: "Robot Vacuum Technology", id: "LPUrm2svxtk" },
-            { title: "Advanced Sweeping Tech", id: "exV9XhEKLvc" },
-            { title: "Robot Vacuum Comparison", id: "nLvvbTSC6jQ" },
+            { title: "NARWAL Feature 1", id: "3xRYUmlzoY0" },
+            { title: "NARWAL Feature 2", id: "kglu5azW9wE" },
+            { title: "NARWAL Feature 3", id: "Or9guVKuPo0" },
+            { title: "NARWAL Feature 4", id: "0oIMOlsMLE0" },
+
+            // General & Guides
+            { title: "Robot Vacuum Demo", id: "LPUrm2svxtk" },
+            { title: "Best Sweeping Tech", id: "exV9XhEKLvc" },
+            { title: "Robot Vac Comparison", id: "nLvvbTSC6jQ" },
             { title: "Buying Guide 2024", id: "V-7sQlWY4M0" },
-            { title: "Worth The Investment?", id: "SBwWtPXwJgM" }
+            { title: "Worth The Money?", id: "SBwWtPXwJgM" }
         ];
 
         let currentIndex = 0;

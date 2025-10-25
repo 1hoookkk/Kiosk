@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Harvey Norman - Robot Vacuum Showcase</title>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>Harvey Norman - Robot Vacuums</title>
     <style>
         * {
             margin: 0;
@@ -14,59 +14,52 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #000;
             overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             -webkit-touch-callout: none;
-            -webkit-user-select: none;
             user-select: none;
         }
 
         #app {
             width: 100vw;
             height: 100vh;
-            display: flex;
-            flex-direction: column;
             position: relative;
         }
 
+        /* Minimal header */
         #header {
-            background: linear-gradient(135deg, #e31837 0%, #b51429 100%);
-            color: white;
-            padding: 20px 30px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, rgba(227, 24, 55, 0.95) 0%, rgba(227, 24, 55, 0.85) 100%);
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
             z-index: 100;
         }
 
         #logo {
-            font-size: 28px;
+            font-size: 20px;
             font-weight: 700;
-            letter-spacing: 1px;
+            color: white;
+            letter-spacing: 0.5px;
         }
 
         #productTitle {
-            font-size: 22px;
-            font-weight: 600;
-            text-align: center;
-            flex: 1;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            font-size: 16px;
+            color: white;
+            font-weight: 500;
         }
 
-        #counter {
-            font-size: 18px;
-            opacity: 0.9;
-        }
-
+        /* Full screen video */
         #videoContainer {
-            flex: 1;
+            width: 100%;
+            height: 100%;
             position: relative;
             background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         #videoFrame {
@@ -75,266 +68,249 @@
             border: none;
         }
 
-        #controls {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
+        /* Start button overlay */
+        #startOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
             display: flex;
-            gap: 20px;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 15px 30px;
-            border-radius: 50px;
-            backdrop-filter: blur(10px);
-            z-index: 50;
-        }
-
-        button {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            z-index: 200;
+            transition: opacity 0.3s;
         }
 
-        button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
+        #startOverlay.hidden {
+            opacity: 0;
+            pointer-events: none;
         }
 
-        button:active {
+        #startButton {
+            background: #e31837;
+            color: white;
+            border: none;
+            padding: 25px 60px;
+            font-size: 24px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(227, 24, 55, 0.4);
+            transition: all 0.3s;
+        }
+
+        #startButton:active {
             transform: scale(0.95);
         }
 
-        #playPauseBtn {
-            background: #e31837;
-            border-color: #e31837;
-            width: 70px;
-            height: 70px;
+        .start-text {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 30px;
+            font-size: 18px;
         }
 
-        #playPauseBtn:hover {
-            background: #c01530;
-        }
-
-        #progress {
+        /* Simple navigation dots */
+        #dots {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 4px;
-            background: #e31837;
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .dots {
-            position: absolute;
-            bottom: 120px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 10px;
+            gap: 8px;
             z-index: 50;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
         }
 
         .dot {
-            width: 12px;
-            height: 12px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.4);
+            transition: all 0.3s;
         }
 
         .dot.active {
             background: #e31837;
-            transform: scale(1.3);
+            width: 24px;
+            border-radius: 4px;
         }
 
-        #loading {
+        /* Progress bar */
+        #progress {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 24px;
-            display: none;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: #e31837;
+            width: 0%;
+            transition: width 0.1s linear;
+            z-index: 50;
         }
 
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #e31837;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
+        /* Swipe hint */
         .swipe-hint {
             position: absolute;
             top: 50%;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 48px;
-            animation: fadeOut 2s forwards;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 40px;
             pointer-events: none;
+            animation: swipeFade 1.5s ease-out forwards;
             z-index: 60;
         }
 
-        .swipe-hint.left {
-            left: 30px;
+        .swipe-hint.left { left: 20px; }
+        .swipe-hint.right { right: 20px; }
+
+        @keyframes swipeFade {
+            0% { opacity: 0; transform: translateY(-50%) translateX(0); }
+            30% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-50%) translateX(var(--direction)); }
         }
 
-        .swipe-hint.right {
-            right: 30px;
-        }
-
-        @keyframes fadeOut {
-            0% { opacity: 1; }
-            70% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-
-        /* iPad specific optimizations */
-        @media (min-width: 768px) and (max-width: 1024px) {
+        /* iPad specific */
+        @media (min-width: 768px) {
             #header {
-                padding: 25px 40px;
+                padding: 20px 30px;
             }
 
             #logo {
-                font-size: 32px;
+                font-size: 24px;
             }
 
             #productTitle {
-                font-size: 26px;
+                font-size: 18px;
+            }
+
+            #startButton {
+                font-size: 28px;
+                padding: 30px 80px;
             }
         }
     </style>
 </head>
 <body>
     <div id="app">
-        <div id="header">
-            <div id="logo">HARVEY NORMAN</div>
-            <div id="productTitle">Robot Vacuum Showcase</div>
-            <div id="counter">1 / 1</div>
+        <!-- Start overlay -->
+        <div id="startOverlay">
+            <div class="start-text">Robot Vacuum Showcase</div>
+            <button id="startButton">TAP TO START</button>
         </div>
 
+        <!-- Minimal header -->
+        <div id="header">
+            <div id="logo">HARVEY NORMAN</div>
+            <div id="productTitle">Loading...</div>
+        </div>
+
+        <!-- Video container -->
         <div id="videoContainer">
             <iframe id="videoFrame"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen>
             </iframe>
-            <div id="loading">
-                <div class="spinner"></div>
-                Loading...
-            </div>
             <div id="progress"></div>
         </div>
 
-        <div class="dots" id="dotsContainer"></div>
-
-        <div id="controls">
-            <button id="prevBtn" aria-label="Previous">◀</button>
-            <button id="playPauseBtn" aria-label="Play/Pause">▶</button>
-            <button id="nextBtn" aria-label="Next">▶</button>
-        </div>
+        <!-- Navigation dots -->
+        <div id="dots"></div>
     </div>
 
     <script>
-        // Video data with cleaned URLs
+        // Video playlist - cleaned URLs
         const videos = [
-            { title: "ECOVACS WS2", url: "https://www.youtube.com/embed/UGETKR5BlY0?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "Z10 ROBOROCK", url: "https://www.youtube.com/embed/87O6hE4cKPM?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "ECOVACS X11", url: "https://www.youtube.com/embed/vknCyYVN8Z8?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "DREAME X50 Ultra", url: "https://www.youtube.com/embed/VKYolDuOwGg?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "DREAME X50 - Feature 2", url: "https://www.youtube.com/embed/neE7uisXKZU?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "DREAME X50 - Feature 3", url: "https://www.youtube.com/embed/qJm17uu0cvk?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "EUFY Robot Vacuum", url: "https://www.youtube.com/embed/bCzMVZZ20ig?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "EUFY - Feature 2", url: "https://www.youtube.com/embed/QRJ6TPcN8IU?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "EUFY - Feature 3", url: "https://www.youtube.com/embed/X1BuTmM12Vl?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "ECOVACS Mopping Demo", url: "https://www.youtube.com/embed/5gcfk1V16Qs?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "DREAME L40 ULTRA", url: "https://www.youtube.com/embed/Ebkp8Y02z-M?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "MOVA ROLLER", url: "https://www.youtube.com/embed/JHVghFKiBc0?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "SAROS 10R", url: "https://www.youtube.com/embed/rDEJDwe5M00?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "SAROS 10R - Feature", url: "https://www.youtube.com/embed/HmNDDBYGcU0?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "SAROS Z10", url: "https://www.youtube.com/embed/87O6hE4cKPM?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "NARWAL FLOW", url: "https://www.youtube.com/embed/G2RmztS8Go0?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "NARWAL - Feature 2", url: "https://www.youtube.com/embed/3xRYUmlzoY0?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "NARWAL - Feature 3", url: "https://www.youtube.com/embed/kglu5azW9wE?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "NARWAL - Feature 4", url: "https://www.youtube.com/embed/Or9guVKuPo0?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "NARWAL - Feature 5", url: "https://www.youtube.com/embed/0oIMOlsMLE0?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "Robot Vacuum Demo", url: "https://www.youtube.com/embed/LPUrm2svxtk?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "DREAME L40", url: "https://www.youtube.com/embed/bTT5nnP74Jo?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "DREAME AQUA", url: "https://www.youtube.com/embed/cmKRwiyHOpU?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "Best Sweeping Technology", url: "https://www.youtube.com/embed/exV9XhEKLvc?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "MOVA Z60 Setup Guide", url: "https://www.youtube.com/embed/xCaiIs5dE80?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "Robot Vac vs Surprise", url: "https://www.youtube.com/embed/nLvvbTSC6jQ?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "Buying Guide", url: "https://www.youtube.com/embed/V-7sQlWY4M0?autoplay=1&mute=1&enablejsapi=1" },
-            { title: "Worth The Money?", url: "https://www.youtube.com/embed/SBwWtPXwJgM?autoplay=1&mute=1&enablejsapi=1" }
+            { title: "ECOVACS WS2", id: "UGETKR5BlY0" },
+            { title: "Roborock Z10", id: "87O6hE4cKPM" },
+            { title: "ECOVACS X11", id: "vknCyYVN8Z8" },
+            { title: "Dreame X50 Ultra", id: "VKYolDuOwGg" },
+            { title: "Dreame X50", id: "neE7uisXKZU" },
+            { title: "Dreame X50", id: "qJm17uu0cvk" },
+            { title: "EUFY Robot Vacuum", id: "bCzMVZZ20ig" },
+            { title: "EUFY", id: "QRJ6TPcN8IU" },
+            { title: "EUFY", id: "X1BuTmM12Vl" },
+            { title: "ECOVACS Mopping", id: "5gcfk1V16Qs" },
+            { title: "Dreame L40 Ultra", id: "Ebkp8Y02z-M" },
+            { title: "MOVA Roller", id: "JHVghFKiBc0" },
+            { title: "SAROS 10R", id: "rDEJDwe5M00" },
+            { title: "SAROS 10R", id: "HmNDDBYGcU0" },
+            { title: "SAROS Z10", id: "87O6hE4cKPM" },
+            { title: "NARWAL Flow", id: "G2RmztS8Go0" },
+            { title: "NARWAL", id: "3xRYUmlzoY0" },
+            { title: "NARWAL", id: "kglu5azW9wE" },
+            { title: "NARWAL", id: "Or9guVKuPo0" },
+            { title: "NARWAL", id: "0oIMOlsMLE0" },
+            { title: "Robot Vacuum Demo", id: "LPUrm2svxtk" },
+            { title: "Dreame L40", id: "bTT5nnP74Jo" },
+            { title: "Dreame Aqua", id: "cmKRwiyHOpU" },
+            { title: "Best Sweeping", id: "exV9XhEKLvc" },
+            { title: "MOVA Z60 Setup", id: "xCaiIs5dE80" },
+            { title: "Robot Vac Test", id: "nLvvbTSC6jQ" },
+            { title: "Buying Guide", id: "V-7sQlWY4M0" },
+            { title: "Worth The Money?", id: "SBwWtPXwJgM" }
         ];
 
         let currentIndex = 0;
-        let isPlaying = true;
-        let autoPlayInterval;
+        let autoplayTimer;
+        let progressInterval;
+        let hasStarted = false;
         let touchStartX = 0;
-        let touchEndX = 0;
 
+        const startOverlay = document.getElementById('startOverlay');
+        const startButton = document.getElementById('startButton');
         const videoFrame = document.getElementById('videoFrame');
         const productTitle = document.getElementById('productTitle');
-        const counter = document.getElementById('counter');
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const dotsContainer = document.getElementById('dotsContainer');
+        const dotsContainer = document.getElementById('dots');
         const progressBar = document.getElementById('progress');
         const videoContainer = document.getElementById('videoContainer');
 
         // Initialize
         function init() {
             createDots();
-            loadVideo(currentIndex);
-            startAutoPlay();
             setupEventListeners();
         }
 
-        // Create navigation dots
+        // Create dots
         function createDots() {
-            videos.forEach((_, index) => {
+            videos.forEach((_, i) => {
                 const dot = document.createElement('div');
                 dot.className = 'dot';
-                if (index === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => goToVideo(index));
+                if (i === 0) dot.classList.add('active');
+                dot.onclick = () => goToVideo(i);
                 dotsContainer.appendChild(dot);
             });
         }
 
+        // Start the showcase
+        function startShowcase() {
+            hasStarted = true;
+            startOverlay.classList.add('hidden');
+            loadVideo(0);
+            startAutoplay();
+        }
+
         // Load video
         function loadVideo(index) {
+            currentIndex = index;
             const video = videos[index];
-            videoFrame.src = video.url;
+
+            // Build YouTube embed URL with autoplay
+            const embedUrl = `https://www.youtube.com/embed/${video.id}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=${video.id}&enablejsapi=1&playsinline=1`;
+
+            videoFrame.src = embedUrl;
             productTitle.textContent = video.title;
-            counter.textContent = `${index + 1} / ${videos.length}`;
 
             // Update dots
             document.querySelectorAll('.dot').forEach((dot, i) => {
                 dot.classList.toggle('active', i === index);
             });
 
-            // Reset progress
-            progressBar.style.width = '0%';
+            resetProgress();
         }
 
         // Navigation
@@ -351,140 +327,97 @@
         }
 
         function goToVideo(index) {
-            currentIndex = index;
-            loadVideo(currentIndex);
-            resetAutoPlay();
+            stopAutoplay();
+            loadVideo(index);
+            startAutoplay();
         }
 
-        // Auto-play functionality
-        function startAutoPlay() {
-            if (isPlaying) {
-                const duration = 15000; // 15 seconds per video
-                const interval = 100;
-                let elapsed = 0;
+        // Autoplay
+        function startAutoplay() {
+            stopAutoplay();
 
-                autoPlayInterval = setInterval(() => {
-                    elapsed += interval;
-                    const progress = (elapsed / duration) * 100;
-                    progressBar.style.width = progress + '%';
+            const duration = 12000; // 12 seconds per video
+            let elapsed = 0;
 
-                    if (elapsed >= duration) {
-                        nextVideo();
-                        elapsed = 0;
-                    }
-                }, interval);
+            progressInterval = setInterval(() => {
+                elapsed += 100;
+                progressBar.style.width = (elapsed / duration * 100) + '%';
+
+                if (elapsed >= duration) {
+                    nextVideo();
+                }
+            }, 100);
+        }
+
+        function stopAutoplay() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
             }
         }
 
-        function stopAutoPlay() {
-            clearInterval(autoPlayInterval);
+        function resetProgress() {
             progressBar.style.width = '0%';
         }
 
-        function resetAutoPlay() {
-            stopAutoPlay();
-            if (isPlaying) {
-                startAutoPlay();
-            }
-        }
-
-        function togglePlayPause() {
-            isPlaying = !isPlaying;
-            playPauseBtn.textContent = isPlaying ? '⏸' : '▶';
-
-            if (isPlaying) {
-                startAutoPlay();
-            } else {
-                stopAutoPlay();
-            }
+        // Swipe hint
+        function showSwipeHint(direction) {
+            const hint = document.createElement('div');
+            hint.className = `swipe-hint ${direction}`;
+            hint.style.setProperty('--direction', direction === 'left' ? '-30px' : '30px');
+            hint.textContent = direction === 'left' ? '◀' : '▶';
+            videoContainer.appendChild(hint);
+            setTimeout(() => hint.remove(), 1500);
         }
 
         // Touch gestures
         function handleTouchStart(e) {
-            touchStartX = e.changedTouches[0].screenX;
+            touchStartX = e.touches[0].clientX;
         }
 
         function handleTouchEnd(e) {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        }
-
-        function handleSwipe() {
-            const swipeThreshold = 50;
+            const touchEndX = e.changedTouches[0].clientX;
             const diff = touchStartX - touchEndX;
 
-            if (Math.abs(diff) > swipeThreshold) {
+            if (Math.abs(diff) > 80) {
+                stopAutoplay();
                 if (diff > 0) {
-                    // Swipe left - next video
                     nextVideo();
-                    resetAutoPlay();
                 } else {
-                    // Swipe right - previous video
                     prevVideo();
-                    resetAutoPlay();
                 }
+                startAutoplay();
             }
-        }
-
-        // Show swipe hint
-        function showSwipeHint(direction) {
-            const hint = document.createElement('div');
-            hint.className = `swipe-hint ${direction}`;
-            hint.textContent = direction === 'left' ? '◀' : '▶';
-            videoContainer.appendChild(hint);
-
-            setTimeout(() => {
-                hint.remove();
-            }, 2000);
         }
 
         // Event listeners
         function setupEventListeners() {
-            playPauseBtn.addEventListener('click', togglePlayPause);
-            nextBtn.addEventListener('click', () => {
-                nextVideo();
-                resetAutoPlay();
-            });
-            prevBtn.addEventListener('click', () => {
-                prevVideo();
-                resetAutoPlay();
-            });
-
-            // Touch events
-            videoContainer.addEventListener('touchstart', handleTouchStart, false);
-            videoContainer.addEventListener('touchend', handleTouchEnd, false);
+            startButton.onclick = startShowcase;
+            videoContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
+            videoContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
 
             // Keyboard navigation
             document.addEventListener('keydown', (e) => {
-                switch(e.key) {
-                    case 'ArrowLeft':
-                        prevVideo();
-                        resetAutoPlay();
-                        break;
-                    case 'ArrowRight':
-                        nextVideo();
-                        resetAutoPlay();
-                        break;
-                    case ' ':
-                        e.preventDefault();
-                        togglePlayPause();
-                        break;
+                if (!hasStarted) return;
+
+                if (e.key === 'ArrowLeft') {
+                    stopAutoplay();
+                    prevVideo();
+                    startAutoplay();
+                } else if (e.key === 'ArrowRight') {
+                    stopAutoplay();
+                    nextVideo();
+                    startAutoplay();
                 }
             });
 
-            // Prevent sleep/screen dimming on iPad
-            const wakeLock = () => {
-                if ('wakeLock' in navigator) {
-                    navigator.wakeLock.request('screen').catch(() => {});
-                }
-            };
-            document.addEventListener('visibilitychange', () => {
-                if (!document.hidden) wakeLock();
-            });
-            wakeLock();
+            // Prevent sleep
+            if ('wakeLock' in navigator) {
+                navigator.wakeLock.request('screen').catch(() => {});
+            }
         }
 
-        // Start the app
+        // Start
         init();
     </script>
 </body>

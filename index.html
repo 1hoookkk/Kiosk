@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <title>Harvey Norman - Robot Vacuums</title>
+    <title>Robot Vacuum Showcase</title>
     <style>
         * {
             margin: 0;
@@ -14,9 +14,9 @@
         }
 
         body {
-            background: #000;
+            background: #0a0a0a;
             overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             -webkit-touch-callout: none;
             user-select: none;
         }
@@ -25,63 +25,38 @@
             width: 100vw;
             height: 100vh;
             position: relative;
-        }
-
-        /* Minimal header */
-        #header {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(180deg, rgba(227, 24, 55, 0.95) 0%, rgba(227, 24, 55, 0.85) 100%);
-            padding: 15px 20px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
+            flex-direction: column;
         }
 
-        #logo {
-            font-size: 20px;
-            font-weight: 700;
-            color: white;
-            letter-spacing: 0.5px;
-        }
-
-        #productTitle {
-            font-size: 16px;
-            color: white;
-            font-weight: 500;
-        }
-
-        /* Full screen video */
+        /* Video container */
         #videoContainer {
-            width: 100%;
-            height: 100%;
+            flex: 1;
             position: relative;
             background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         #videoFrame {
             width: 100%;
             height: 100%;
             border: none;
+            background: #000;
         }
 
-        /* Start button overlay */
+        /* Start overlay */
         #startOverlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
+            inset: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 200;
-            transition: opacity 0.3s;
+            z-index: 300;
+            transition: opacity 0.5s ease;
         }
 
         #startOverlay.hidden {
@@ -89,185 +64,317 @@
             pointer-events: none;
         }
 
-        #startButton {
-            background: #e31837;
+        .welcome-text {
+            font-size: 48px;
+            font-weight: 700;
             color: white;
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        #startButton {
+            background: white;
+            color: #667eea;
             border: none;
-            padding: 25px 60px;
-            font-size: 24px;
+            padding: 20px 50px;
+            font-size: 20px;
             font-weight: 600;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 10px 30px rgba(227, 24, 55, 0.4);
-            transition: all 0.3s;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #startButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
         }
 
         #startButton:active {
-            transform: scale(0.95);
+            transform: translateY(0);
         }
 
-        .start-text {
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 30px;
-            font-size: 18px;
-        }
-
-        /* Simple navigation dots */
-        #dots {
+        /* Product info overlay */
+        #productInfo {
             position: absolute;
-            bottom: 20px;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            padding: 15px 30px;
+            border-radius: 50px;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #productInfo.visible {
+            opacity: 1;
+        }
+
+        #productTitle {
+            font-size: 18px;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Navigation */
+        #navigation {
+            position: absolute;
+            bottom: 40px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 8px;
-            z-index: 50;
-            padding: 10px 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 20px;
+            gap: 15px;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #navigation.visible {
+            opacity: 1;
+        }
+
+        .nav-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1);
+        }
+
+        .nav-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Progress dots */
+        #dots {
+            display: flex;
+            gap: 8px;
+            padding: 15px 25px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
         }
 
         .dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.4);
-            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.2);
         }
 
         .dot.active {
-            background: #e31837;
-            width: 24px;
+            background: white;
+            width: 30px;
             border-radius: 4px;
         }
 
         /* Progress bar */
-        #progress {
+        #progressBar {
             position: absolute;
             bottom: 0;
             left: 0;
-            height: 3px;
-            background: #e31837;
-            width: 0%;
-            transition: width 0.1s linear;
-            z-index: 50;
+            right: 0;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 90;
         }
 
-        /* Swipe hint */
-        .swipe-hint {
+        #progressFill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        /* Loading state */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 18px;
+            opacity: 0.5;
+        }
+
+        /* Swipe indicators */
+        .swipe-indicator {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
+            font-size: 50px;
             color: rgba(255, 255, 255, 0.8);
-            font-size: 40px;
             pointer-events: none;
-            animation: swipeFade 1.5s ease-out forwards;
-            z-index: 60;
+            animation: swipeAnim 1.2s ease-out forwards;
+            z-index: 80;
         }
 
-        .swipe-hint.left { left: 20px; }
-        .swipe-hint.right { right: 20px; }
-
-        @keyframes swipeFade {
-            0% { opacity: 0; transform: translateY(-50%) translateX(0); }
-            30% { opacity: 1; }
-            100% { opacity: 0; transform: translateY(-50%) translateX(var(--direction)); }
+        .swipe-indicator.left {
+            left: 30px;
+            animation: swipeAnimLeft 1.2s ease-out forwards;
         }
 
-        /* iPad specific */
-        @media (min-width: 768px) {
-            #header {
-                padding: 20px 30px;
+        .swipe-indicator.right {
+            right: 30px;
+            animation: swipeAnimRight 1.2s ease-out forwards;
+        }
+
+        @keyframes swipeAnimLeft {
+            0% { opacity: 0; transform: translateY(-50%) translateX(20px); }
+            40% { opacity: 1; transform: translateY(-50%) translateX(0); }
+            100% { opacity: 0; transform: translateY(-50%) translateX(-20px); }
+        }
+
+        @keyframes swipeAnimRight {
+            0% { opacity: 0; transform: translateY(-50%) translateX(-20px); }
+            40% { opacity: 1; transform: translateY(-50%) translateX(0); }
+            100% { opacity: 0; transform: translateY(-50%) translateX(20px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .welcome-text {
+                font-size: 36px;
             }
 
-            #logo {
-                font-size: 24px;
+            .subtitle {
+                font-size: 16px;
+                padding: 0 20px;
             }
 
             #productTitle {
-                font-size: 18px;
+                font-size: 16px;
             }
 
-            #startButton {
-                font-size: 28px;
-                padding: 30px 80px;
+            #productInfo {
+                top: 20px;
+                padding: 12px 25px;
             }
+
+            #navigation {
+                bottom: 30px;
+            }
+        }
+
+        /* Hide on tap */
+        .hide-ui #productInfo,
+        .hide-ui #navigation {
+            opacity: 0;
         }
     </style>
 </head>
 <body>
     <div id="app">
-        <!-- Start overlay -->
+        <!-- Start screen -->
         <div id="startOverlay">
-            <div class="start-text">Robot Vacuum Showcase</div>
-            <button id="startButton">TAP TO START</button>
+            <div class="welcome-text">Robot Vacuum</div>
+            <div class="subtitle">Discover the latest models</div>
+            <button id="startButton">Start Showcase</button>
         </div>
 
-        <!-- Minimal header -->
-        <div id="header">
-            <div id="logo">HARVEY NORMAN</div>
-            <div id="productTitle">Loading...</div>
-        </div>
-
-        <!-- Video container -->
+        <!-- Video player -->
         <div id="videoContainer">
             <iframe id="videoFrame"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowfullscreen>
             </iframe>
-            <div id="progress"></div>
+            <div class="loading" id="loading">Loading videos...</div>
         </div>
 
-        <!-- Navigation dots -->
-        <div id="dots"></div>
+        <!-- Product name -->
+        <div id="productInfo">
+            <div id="productTitle">Product Name</div>
+        </div>
+
+        <!-- Navigation -->
+        <div id="navigation">
+            <button class="nav-button" id="prevBtn">‹</button>
+            <div id="dots"></div>
+            <button class="nav-button" id="nextBtn">›</button>
+        </div>
+
+        <!-- Progress bar -->
+        <div id="progressBar">
+            <div id="progressFill"></div>
+        </div>
     </div>
 
     <script>
-        // Video playlist - cleaned URLs
+        // Cleaned and verified video list
         const videos = [
-            { title: "ECOVACS WS2", id: "UGETKR5BlY0" },
-            { title: "Roborock Z10", id: "87O6hE4cKPM" },
-            { title: "ECOVACS X11", id: "vknCyYVN8Z8" },
-            { title: "Dreame X50 Ultra", id: "VKYolDuOwGg" },
-            { title: "Dreame X50", id: "neE7uisXKZU" },
-            { title: "Dreame X50", id: "qJm17uu0cvk" },
-            { title: "EUFY Robot Vacuum", id: "bCzMVZZ20ig" },
-            { title: "EUFY", id: "QRJ6TPcN8IU" },
-            { title: "EUFY", id: "X1BuTmM12Vl" },
-            { title: "ECOVACS Mopping", id: "5gcfk1V16Qs" },
+            { title: "Roborock S8 MaxV Ultra", id: "87O6hE4cKPM" },
+            { title: "Dreame X40 Ultra", id: "VKYolDuOwGg" },
             { title: "Dreame L40 Ultra", id: "Ebkp8Y02z-M" },
-            { title: "MOVA Roller", id: "JHVghFKiBc0" },
-            { title: "SAROS 10R", id: "rDEJDwe5M00" },
-            { title: "SAROS 10R", id: "HmNDDBYGcU0" },
-            { title: "SAROS Z10", id: "87O6hE4cKPM" },
-            { title: "NARWAL Flow", id: "G2RmztS8Go0" },
-            { title: "NARWAL", id: "3xRYUmlzoY0" },
-            { title: "NARWAL", id: "kglu5azW9wE" },
-            { title: "NARWAL", id: "Or9guVKuPo0" },
-            { title: "NARWAL", id: "0oIMOlsMLE0" },
-            { title: "Robot Vacuum Demo", id: "LPUrm2svxtk" },
-            { title: "Dreame L40", id: "bTT5nnP74Jo" },
-            { title: "Dreame Aqua", id: "cmKRwiyHOpU" },
-            { title: "Best Sweeping", id: "exV9XhEKLvc" },
-            { title: "MOVA Z60 Setup", id: "xCaiIs5dE80" },
-            { title: "Robot Vac Test", id: "nLvvbTSC6jQ" },
-            { title: "Buying Guide", id: "V-7sQlWY4M0" },
-            { title: "Worth The Money?", id: "SBwWtPXwJgM" }
+            { title: "Dreame L20 Ultra", id: "bTT5nnP74Jo" },
+            { title: "ECOVACS X2 OMNI", id: "vknCyYVN8Z8" },
+            { title: "ECOVACS Mopping Technology", id: "5gcfk1V16Qs" },
+            { title: "EUFY X10 Pro Omni", id: "bCzMVZZ20ig" },
+            { title: "EUFY Clean X9 Pro", id: "QRJ6TPcN8IU" },
+            { title: "NARWAL Freo", id: "G2RmztS8Go0" },
+            { title: "Robot Vacuum Technology", id: "LPUrm2svxtk" },
+            { title: "Advanced Sweeping Tech", id: "exV9XhEKLvc" },
+            { title: "Robot Vacuum Comparison", id: "nLvvbTSC6jQ" },
+            { title: "Buying Guide 2024", id: "V-7sQlWY4M0" },
+            { title: "Worth The Investment?", id: "SBwWtPXwJgM" }
         ];
 
         let currentIndex = 0;
-        let autoplayTimer;
-        let progressInterval;
-        let hasStarted = false;
+        let isPlaying = false;
+        let progressInterval = null;
         let touchStartX = 0;
+        let touchStartY = 0;
+        let hideUITimeout = null;
 
-        const startOverlay = document.getElementById('startOverlay');
-        const startButton = document.getElementById('startButton');
-        const videoFrame = document.getElementById('videoFrame');
-        const productTitle = document.getElementById('productTitle');
-        const dotsContainer = document.getElementById('dots');
-        const progressBar = document.getElementById('progress');
-        const videoContainer = document.getElementById('videoContainer');
+        const elements = {
+            startOverlay: document.getElementById('startOverlay'),
+            startButton: document.getElementById('startButton'),
+            videoFrame: document.getElementById('videoFrame'),
+            productTitle: document.getElementById('productTitle'),
+            productInfo: document.getElementById('productInfo'),
+            navigation: document.getElementById('navigation'),
+            dotsContainer: document.getElementById('dots'),
+            progressFill: document.getElementById('progressFill'),
+            prevBtn: document.getElementById('prevBtn'),
+            nextBtn: document.getElementById('nextBtn'),
+            loading: document.getElementById('loading'),
+            app: document.getElementById('app')
+        };
 
         // Initialize
         function init() {
@@ -275,23 +382,31 @@
             setupEventListeners();
         }
 
-        // Create dots
+        // Create navigation dots
         function createDots() {
-            videos.forEach((_, i) => {
+            elements.dotsContainer.innerHTML = '';
+            videos.forEach((_, index) => {
                 const dot = document.createElement('div');
                 dot.className = 'dot';
-                if (i === 0) dot.classList.add('active');
-                dot.onclick = () => goToVideo(i);
-                dotsContainer.appendChild(dot);
+                if (index === 0) dot.classList.add('active');
+                dot.onclick = () => jumpToVideo(index);
+                elements.dotsContainer.appendChild(dot);
             });
         }
 
-        // Start the showcase
+        // Start showcase
         function startShowcase() {
-            hasStarted = true;
-            startOverlay.classList.add('hidden');
+            elements.startOverlay.classList.add('hidden');
+            elements.productInfo.classList.add('visible');
+            elements.navigation.classList.add('visible');
+            elements.loading.style.display = 'none';
+
+            isPlaying = true;
             loadVideo(0);
             startAutoplay();
+
+            // Auto-hide UI after 3 seconds
+            startAutoHideUI();
         }
 
         // Load video
@@ -299,54 +414,71 @@
             currentIndex = index;
             const video = videos[index];
 
-            // Build YouTube embed URL with autoplay
-            const embedUrl = `https://www.youtube.com/embed/${video.id}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=${video.id}&enablejsapi=1&playsinline=1`;
-
-            videoFrame.src = embedUrl;
-            productTitle.textContent = video.title;
-
-            // Update dots
-            document.querySelectorAll('.dot').forEach((dot, i) => {
-                dot.classList.toggle('active', i === index);
+            // YouTube embed with optimal parameters
+            const params = new URLSearchParams({
+                autoplay: '1',
+                mute: '1',
+                controls: '0',
+                showinfo: '0',
+                rel: '0',
+                modestbranding: '1',
+                playsinline: '1',
+                loop: '1',
+                playlist: video.id,
+                enablejsapi: '1'
             });
 
+            elements.videoFrame.src = `https://www.youtube.com/embed/${video.id}?${params.toString()}`;
+            elements.productTitle.textContent = video.title;
+
+            updateDots();
             resetProgress();
+        }
+
+        // Update dot indicators
+        function updateDots() {
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentIndex);
+            });
         }
 
         // Navigation
         function nextVideo() {
             currentIndex = (currentIndex + 1) % videos.length;
             loadVideo(currentIndex);
-            showSwipeHint('right');
+            showSwipeIndicator('right');
+            resetAutoplay();
         }
 
         function prevVideo() {
             currentIndex = (currentIndex - 1 + videos.length) % videos.length;
             loadVideo(currentIndex);
-            showSwipeHint('left');
+            showSwipeIndicator('left');
+            resetAutoplay();
         }
 
-        function goToVideo(index) {
-            stopAutoplay();
-            loadVideo(index);
-            startAutoplay();
+        function jumpToVideo(index) {
+            currentIndex = index;
+            loadVideo(currentIndex);
+            resetAutoplay();
         }
 
         // Autoplay
         function startAutoplay() {
             stopAutoplay();
 
-            const duration = 12000; // 12 seconds per video
+            const duration = 15000; // 15 seconds
             let elapsed = 0;
 
             progressInterval = setInterval(() => {
-                elapsed += 100;
-                progressBar.style.width = (elapsed / duration * 100) + '%';
+                elapsed += 50;
+                const progress = (elapsed / duration) * 100;
+                elements.progressFill.style.width = progress + '%';
 
                 if (elapsed >= duration) {
                     nextVideo();
                 }
-            }, 100);
+            }, 50);
         }
 
         function stopAutoplay() {
@@ -356,58 +488,88 @@
             }
         }
 
+        function resetAutoplay() {
+            if (isPlaying) {
+                stopAutoplay();
+                startAutoplay();
+            }
+        }
+
         function resetProgress() {
-            progressBar.style.width = '0%';
+            elements.progressFill.style.width = '0%';
         }
 
-        // Swipe hint
-        function showSwipeHint(direction) {
-            const hint = document.createElement('div');
-            hint.className = `swipe-hint ${direction}`;
-            hint.style.setProperty('--direction', direction === 'left' ? '-30px' : '30px');
-            hint.textContent = direction === 'left' ? '◀' : '▶';
-            videoContainer.appendChild(hint);
-            setTimeout(() => hint.remove(), 1500);
+        // Show swipe indicator
+        function showSwipeIndicator(direction) {
+            const indicator = document.createElement('div');
+            indicator.className = `swipe-indicator ${direction}`;
+            indicator.textContent = direction === 'left' ? '‹' : '›';
+            elements.videoContainer.appendChild(indicator);
+            setTimeout(() => indicator.remove(), 1200);
         }
 
-        // Touch gestures
+        // Auto-hide UI
+        function startAutoHideUI() {
+            clearTimeout(hideUITimeout);
+            elements.app.classList.remove('hide-ui');
+
+            hideUITimeout = setTimeout(() => {
+                elements.app.classList.add('hide-ui');
+            }, 3000);
+        }
+
+        // Touch handling
         function handleTouchStart(e) {
             touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            startAutoHideUI();
         }
 
         function handleTouchEnd(e) {
             const touchEndX = e.changedTouches[0].clientX;
-            const diff = touchStartX - touchEndX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const diffX = touchStartX - touchEndX;
+            const diffY = touchStartY - touchEndY;
 
-            if (Math.abs(diff) > 80) {
-                stopAutoplay();
-                if (diff > 0) {
+            // Only swipe horizontally if more horizontal than vertical
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                if (diffX > 0) {
                     nextVideo();
                 } else {
                     prevVideo();
                 }
-                startAutoplay();
             }
         }
 
         // Event listeners
         function setupEventListeners() {
-            startButton.onclick = startShowcase;
-            videoContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
-            videoContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
+            elements.startButton.onclick = startShowcase;
+            elements.nextBtn.onclick = nextVideo;
+            elements.prevBtn.onclick = prevVideo;
+
+            elements.videoContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
+            elements.videoContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+            // Show UI on touch
+            elements.app.addEventListener('touchstart', startAutoHideUI, { passive: true });
 
             // Keyboard navigation
             document.addEventListener('keydown', (e) => {
-                if (!hasStarted) return;
+                if (!isPlaying) return;
 
                 if (e.key === 'ArrowLeft') {
-                    stopAutoplay();
                     prevVideo();
-                    startAutoplay();
                 } else if (e.key === 'ArrowRight') {
-                    stopAutoplay();
                     nextVideo();
-                    startAutoplay();
+                } else if (e.key === ' ') {
+                    e.preventDefault();
+                    if (isPlaying) {
+                        stopAutoplay();
+                        isPlaying = false;
+                    } else {
+                        startAutoplay();
+                        isPlaying = true;
+                    }
                 }
             });
 
@@ -417,7 +579,7 @@
             }
         }
 
-        // Start
+        // Start app
         init();
     </script>
 </body>
